@@ -6,14 +6,20 @@
   </div>
 
 	<div class="row">
-		<form ng-submit="buy()">
+		<form ng-submit="placeorder()">
+			<div class="col-md-1">
+				<select class="form-control"  ng-model="type" id="ordertypeSelector" required autofocus>
+					<option value="buying">Buy</option>
+					<option value="selling">Sell</option>
+				</select>
+			</div>
 			<div class="col-md-2">
 				Amount
-				<input class="form-control" type="number" ng-model="buyamount" id="buyamountInputField" required autofocus>
+				<input class="form-control" type="number" ng-model="amount" id="amountInputField" required autofocus>
 			</div>
 			<div class="col-md-2">
 				Price per security
-				<input class="form-control" type="number" ng-model="buyprice" id="buypriceInputField" required autofocus>
+				<input class="form-control" type="number" ng-model="price" id="priceInputField" required autofocus>
 			</div>
 			<div class="col-md-1">
 			 <br>
@@ -21,19 +27,4 @@
 			</div>
 		</form>
 	</div>
-
-	<div class="row">
-		<form ng-submit="sell()">
-			<div class="col-md-2">
-				<input class="form-control" type="number" ng-model="sellamount" id="sellamountInputField" required autofocus>
-			</div>
-			<div class="col-md-2">
-				<input class="form-control" type="number" ng-model="sellprice" id="sellpriceInputField" required autofocus>
-			</div>
-			<div class="col-md-1">
-				<input class="btn btn-default" type="submit" id="sellOKBtn" value="Sell">
-			</div>
-		</form>
-	</div>
-
 </div>

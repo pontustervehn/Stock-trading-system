@@ -66,61 +66,60 @@ socket.on('addsec', function (req) {
 });
 
 
-socket.on('addbuyorder', function (req) {
+socket.on('placeorder', function (req) {
   if (req.username === ''){
     req.username = "Anonymous";
   } else {}
-  //socket.emit("addbuyorder", {bamount:$scope.buyamount, bprice:$scope.buyprice, username:user.getName(), secname:$scope.security});
-  console.log("You added Buyorder: \nAmount: " + req.bamount + "\nPrice: " + req.bprice + "\nUsername: " + req.username + "\nSecurityname: " + req.secname);
+  //socket.emit("placeorder", {amount:$scope.buyamount, price:$scope.buyprice, username:user.getName(), secname:$scope.security});
+  console.log("You added " +req.type+ "-order: \nAmount: " + req.amount + "\nPrice: " + req.price + "\nUsername: " + req.username + "\nSecurityname: " + req.secname);
   var uname = req.username;
-  var type = "buying";
+  var type = req.type
   var secname = req.secname;
-  var amount= req.bamount;
-  var price = req.bprice;
+  var amount= req.amount;
+  var price = req.price;
 
-
+  console.log("Före getOrders");
   var orders = order.getOrders();
-
+  console.log("Före for-loopen" + orders);
   //TO-DO: MÅSTE HANTERA INDEX SOM ÄNDRAS MED TIDEN UNDER LOOPENS GÅNG
-  for (var i = 0; i < orders.length; i++) {
+  for (var i = 0; i < orders.length; i+=1) {
+    console.log("Inne i for-loopen");
     //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-    if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount===amount)){
+    if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount===amount)){
       //add or send info to completed trades
       console.log("Removing sell-order");
-      io.to(orderId).emit('addbuyorder', req);
+      io.to(orderId).emit('placeorder', req);
       order.removeOrder(orders[i].orderId);
       console.log("breaking loop at first if");
       break;
 
-    } else if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount>amount)) {
+    } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount>amount)) {
         //add or send info to completed trades
       var newAmount = orders[i].amount - amount
       console.log("Updating sell-order");
-      io.to(orderId).emit('addbuyorder', req);
+      io.to(orderId).emit('placeorder', req);
       order.updateOrder(orders[i].orderId, newAmount);
       console.log("breaking loop at second if");
       break;
 
-    } else if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount<amount)) {
+    } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount<amount)) {
         //add or send info to completed trades
         console.log("Removing sell-order");
-        io.to(orderId).emit('addbuyorder', req);
+        io.to(orderId).emit('placeorder', req);
         order.removeOrder(orders[i].orderId);
 
         console.log("Adding buy order with lowered amount");
         var newAmount2 = orders[i].amount - amount
-          io.to(uname, type, secname, newAmount2, price).emit('addbuyorder', req);
+          io.to(uname, type, secname, newAmount2, price).emit('placeorder', req);
           order.addOrder(uname, type, secname, newAmount2, price);
 
         console.log("Continuing loop at third if");
 
     } else {
-      io.to(uname, type, secname, amount, price).emit('addbuyorder', req);
+      io.to(uname, type, secname, amount, price).emit('placeorder', req);
       order.addOrder(uname, type, secname, amount, price);
       console.log("breaking loop at else");
       break;
-
-
     }
 
   }
@@ -134,34 +133,8 @@ socket.on('addbuyorder', function (req) {
     this.dateAdded = date;  //when the order was made, loop through (compare) earlier orders first
   }*/
 
-
-
-
-
-  io.to(uname, type, secname, amount, price).emit('addbuyorder', req);
-  order.addOrder(uname, type, secname, amount, price);
-});
-
-socket.on('addsellorder', function (req) {
-  if (req.username === ''){
-    req.username = "Anonymous";
-  } else {}
-  //socket.emit("addbuyorder", {bamount:$scope.buyamount, bprice:$scope.buyprice, username:user.getName(), secname:$scope.security});
-  console.log("You added Sellorder: \nAmount: " + req.samount + "\nPrice: " + req.sprice + "\nUsername: " + req.username + "\nSecurityname: " + req.secname);
-  var uname = req.username;
-  var type = "selling";
-  var secname = req.secname;
-  var amount= req.samount;
-  var price = req.sprice;
-
-
-
-
-
-
-
-  io.to(uname, type, secname, amount, price).emit('addsellorder', req);
-  order.addOrder(uname, type, secname, amount, price);
+//  io.to(uname, type, secname, amount, price).emit('placeorder', req);
+//  order.addOrder(uname, type, secname, amount, price);
 });
 
 

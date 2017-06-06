@@ -143,22 +143,13 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
       $location.path('/security/' + security.name);
     };
 
-    $scope.buy = function() {
-      console.log("Reached buy()");
-      socket.emit("addbuyorder", {bamount:$scope.buyamount, bprice:$scope.buyprice, username:user.getName(), secname:$scope.security});
-      $scope.buyamount = "";
-      $scope.buyprice = "";
+    $scope.placeorder = function() {
+      console.log("Reached placeorder()");
+      socket.emit("placeorder", {type:$scope.type, amount:$scope.amount, price:$scope.price, username:user.getName(), secname:$scope.security});
+      $scope.type = "";
+      $scope.amount = "";
+      $scope.price = "";
     };
-
-    $scope.sell = function() {
-      console.log("Reached sell()");
-      socket.emit("addsellorder", {samount:$scope.sellamount, sprice:$scope.sellprice, username:user.getName(), secname:$scope.security});
-      $scope.sellamount = "";
-      $scope.sellprice = "";
-    };
-
-
-
   }
 ]);
 
