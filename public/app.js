@@ -24,6 +24,14 @@
         templateUrl: 'room.html',
         controller: 'roomController'
       }).
+      when('/seclist', {
+        templateUrl: 'seclist.html',
+        controller: 'seclistController'
+      }).
+      when('/security/:security', {
+        templateUrl: 'security.html',
+        controller: 'securityController'
+      }).
       otherwise({
         redirectTo: '/list'
       });

@@ -1,0 +1,80 @@
+<div class="container" ng-controller="seclistController">
+
+<div class="row">
+    <div class="row  col-md-4">
+        <h4>Securities</h4>
+
+
+
+        <div class="well well-sm"  style="text-align: center;" ng-repeat="security in securities" ng-click="redirect(security)">
+          <div class="row">
+            <h4>
+              <span><a href="">{{security.name}}</a></span>
+            </h4>
+          </div>
+        </div>
+
+    <div class="text-box">
+    	<h4>Add a security</h4>
+    	<form ng-submit="secdone()">
+        <div class="col-md-10">
+    		    <input class="form-control" type="text" ng-model="sec" id="addsecInputField" required autofocus>
+        </div>
+        <div class="col-md-2">
+          <input class="btn btn-default" type="submit" id="addsecOKBtn" value="Ok">
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="col-md-4">
+    <h4>Active orders</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Price</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="order in orders">
+          <td>{{order.userId}}</td>
+          <td>{{order.type}}</td>
+          <td>{{order.amount}}</td>
+          <td>{{order.price}}</td>
+          <td>{{order.dateAdded}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-4">
+    <h4>Completed trades</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Buyer</th>
+          <th>Seller</th>
+          <th>Amount</th>
+          <th>Price</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            LOL.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  </div>
+</div>
