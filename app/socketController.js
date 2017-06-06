@@ -79,6 +79,65 @@ socket.on('addbuyorder', function (req) {
   var price = req.bprice;
 
 
+  var orders = order.getOrders();
+
+  //TO-DO: MÅSTE HANTERA INDEX SOM ÄNDRAS MED TIDEN UNDER LOOPENS GÅNG
+  for (var i = 0; i < orders.length; i++) {
+    //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
+    if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount===amount)){
+      //add or send info to completed trades
+      console.log("Removing sell-order");
+      io.to(orderId).emit('addbuyorder', req);
+      order.removeOrder(orders[i].orderId);
+      console.log("breaking loop at first if");
+      break;
+
+    } else if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount>amount)) {
+        //add or send info to completed trades
+      var newAmount = orders[i].amount - amount
+      console.log("Updating sell-order");
+      io.to(orderId).emit('addbuyorder', req);
+      order.updateOrder(orders[i].orderId, newAmount);
+      console.log("breaking loop at second if");
+      break;
+
+    } else if ((orders[i].security===secname) && (orders[i].type===type) && (orders[i].price === price) && (orders[i].amount<amount)) {
+        //add or send info to completed trades
+        console.log("Removing sell-order");
+        io.to(orderId).emit('addbuyorder', req);
+        order.removeOrder(orders[i].orderId);
+
+        console.log("Adding buy order with lowered amount");
+        var newAmount2 = orders[i].amount - amount
+          io.to(uname, type, secname, newAmount2, price).emit('addbuyorder', req);
+          order.addOrder(uname, type, secname, newAmount2, price);
+
+        console.log("Continuing loop at third if");
+
+    } else {
+      io.to(uname, type, secname, amount, price).emit('addbuyorder', req);
+      order.addOrder(uname, type, secname, amount, price);
+      console.log("breaking loop at else");
+      break;
+
+
+    }
+
+  }
+/*function Order(orderId, uID, type, sec, amt, price, date) {
+    this.orderId = orderId;    //unique orderid
+    this.userId = uID;     //userid/name of person who placed order
+    this.type = type;       //buying or selling
+    this.security = sec;   //name of security in order
+    this.amount = amt;     //amount of securities in order
+    this.price = price;      //price per security in order
+    this.dateAdded = date;  //when the order was made, loop through (compare) earlier orders first
+  }*/
+
+
+
+
+
   io.to(uname, type, secname, amount, price).emit('addbuyorder', req);
   order.addOrder(uname, type, secname, amount, price);
 });
@@ -94,6 +153,13 @@ socket.on('addsellorder', function (req) {
   var secname = req.secname;
   var amount= req.samount;
   var price = req.sprice;
+
+
+
+
+
+
+
   io.to(uname, type, secname, amount, price).emit('addsellorder', req);
   order.addOrder(uname, type, secname, amount, price);
 });
