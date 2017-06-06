@@ -23,6 +23,7 @@ router.get('/room/:room', function (req, res) {
   res.json({list: messages});
 });
 
+//lols
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 router.get('/securitylist', function (req, res) {
