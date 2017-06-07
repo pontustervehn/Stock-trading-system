@@ -79,50 +79,77 @@ socket.on('placeorder', function (req) {
   var price = req.price;
 
   console.log("Före getOrders");
-  var orders = order.getOrders();
-  console.log("Före for-loopen" + orders);
+  //var orders = order.getOrders();
+  //console.log("Före for-loopen" + orders + "what...");
+
   //TO-DO: MÅSTE HANTERA INDEX SOM ÄNDRAS MED TIDEN UNDER LOOPENS GÅNG
-  for (var i = 0; i < orders.length; i+=1) {
+
+  var noOrderMatches = true
+
+  if (order.getOrders().length <= 0){
+    console.log("Arrayen är tom. Lägger till första ordern.");
+    io.to(uname, type, secname, amount, price).emit('placeorder', req);
+    order.addOrder(uname, type, secname, amount, price);
+    noOrderMatches = false;
+  } else {
+
+//  function orderLoop(orders) {
+  for (var i = 0; i < order.getOrders().length; i+=1) { //ändrade från i++
     console.log("Inne i for-loopen");
     //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
     if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount===amount)){
       //add or send info to completed trades
-      console.log("Removing sell-order");
-      io.to(orderId).emit('placeorder', req);
+      console.log("Removing " + orders[i].type + "-order");
+      io.to(orders[i].orderId).emit('placeorder', req);
       order.removeOrder(orders[i].orderId);
       console.log("breaking loop at first if");
+      noOrderMatches = false;
       break;
 
     } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount>amount)) {
         //add or send info to completed trades
-      var newAmount = orders[i].amount - amount
-      console.log("Updating sell-order");
-      io.to(orderId).emit('placeorder', req);
-      order.updateOrder(orders[i].orderId, newAmount);
-      console.log("breaking loop at second if");
-      break;
+        var newAmount = orders[i].amount - amount;
+        console.log("Updating " + orders[i].type + "-order");
+        io.to(orders[i].orderId, newAmount).emit('placeorder', req);
+        order.updateOrder(orders[i].orderId, newAmount);
+        console.log("breaking loop at second if");
+        noOrderMatches = false;
+        break;
 
     } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount<amount)) {
         //add or send info to completed trades
-        console.log("Removing sell-order");
-        io.to(orderId).emit('placeorder', req);
+        var newAmount2 = amount - orders[i].amount;
+
+        console.log("Removing " + orders[i].type + "-order");
+        io.to(orders[i].orderId).emit('placeorder', req);
         order.removeOrder(orders[i].orderId);
-
-        console.log("Adding buy order with lowered amount");
-        var newAmount2 = orders[i].amount - amount
-          io.to(uname, type, secname, newAmount2, price).emit('placeorder', req);
-          order.addOrder(uname, type, secname, newAmount2, price);
-
+        console.log("Adding " + type + "-order with lowered amount");
+        io.to(uname, type, secname, newAmount2, price).emit('placeorder', req);
+        order.addOrder(uname, type, secname, newAmount2, price);
+        noOrderMatches = false;
         console.log("Continuing loop at third if");
+        orderLoop(order.getOrders());
 
-    } else {
-      io.to(uname, type, secname, amount, price).emit('placeorder', req);
-      order.addOrder(uname, type, secname, amount, price);
-      console.log("breaking loop at else");
-      break;
-    }
+    } else {}
 
   }
+
+
+//}//end orderloop definition
+//orderLoop(orders);
+
+
+
+  if (noOrderMatches){
+    console.log("runs if no=rdermatches");
+    io.to(uname, type, secname, amount, price).emit('placeorder', req);
+    order.addOrder(uname, type, secname, amount, price);
+    console.log("breaking loop at else");
+  } else {}
+
+  noOrderMatches = true;
+
+}
 /*function Order(orderId, uID, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
     this.userId = uID;     //userid/name of person who placed order

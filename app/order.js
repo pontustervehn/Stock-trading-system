@@ -59,7 +59,7 @@ exports.removeOrder = function(id){
     var order = orderList[i];
     if (order.orderId === id) {
       orderList.splice(i, 1);
-      order.remove();
+      //order.remove();
       break;
     }
   }
