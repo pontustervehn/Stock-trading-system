@@ -97,32 +97,34 @@ socket.on('placeorder', function (req) {
   for (var i = 0; i < order.getOrders().length; i+=1) { //ändrade från i++
     console.log("Inne i for-loopen");
     //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-    if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount===amount)){
-      //add or send info to completed trades
-      console.log("Removing " + orders[i].type + "-order");
-      io.to(orders[i].orderId).emit('placeorder', req);
-      order.removeOrder(orders[i].orderId);
-      console.log("breaking loop at first if");
-      noOrderMatches = false;
-      break;
+    if ((order.getOrders()[i].security===secname) && (order.getOrders()[i].type!==type) && (order.getOrders()[i].price === price)){
 
-    } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount>amount)) {
+      if (order.getOrders()[i].amount===amount){
         //add or send info to completed trades
-        var newAmount = orders[i].amount - amount;
-        console.log("Updating " + orders[i].type + "-order");
-        io.to(orders[i].orderId, newAmount).emit('placeorder', req);
-        order.updateOrder(orders[i].orderId, newAmount);
+        console.log("Removing " + order.getOrders()[i].type + "-order");
+        io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+        order.removeOrder(order.getOrders()[i].orderId);
+        console.log("breaking loop at first if");
+        noOrderMatches = false;
+        break;
+
+      } else if (order.getOrders()[i].amount>amount) {
+        //add or send info to completed trades
+        var newAmount = order.getOrders()[i].amount - amount;
+        console.log("Updating " + order.getOrders()[i].type + "-order");
+        io.to(order.getOrders()[i].orderId, newAmount).emit('placeorder', req);
+        order.updateOrder(order.getOrders()[i].orderId, newAmount);
         console.log("breaking loop at second if");
         noOrderMatches = false;
         break;
 
-    } else if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price) && (orders[i].amount<amount)) {
+      } else if (order.getOrders()[i].amount<amount) {
         //add or send info to completed trades
-        var newAmount2 = amount - orders[i].amount;
+        var newAmount2 = amount - order.getOrders()[i].amount;
 
-        console.log("Removing " + orders[i].type + "-order");
-        io.to(orders[i].orderId).emit('placeorder', req);
-        order.removeOrder(orders[i].orderId);
+        console.log("Removing " + order.getOrders()[i].type + "-order");
+        io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+        order.removeOrder(order.getOrders()[i].orderId);
         console.log("Adding " + type + "-order with lowered amount");
         io.to(uname, type, secname, newAmount2, price).emit('placeorder', req);
         order.addOrder(uname, type, secname, newAmount2, price);
@@ -132,12 +134,12 @@ socket.on('placeorder', function (req) {
 
     } else {}
 
-  }
+  } else {}
 
 
 //}//end orderloop definition
 //orderLoop(orders);
-
+}}
 
 
   if (noOrderMatches){
@@ -149,7 +151,6 @@ socket.on('placeorder', function (req) {
 
   noOrderMatches = true;
 
-}
 /*function Order(orderId, uID, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
     this.userId = uID;     //userid/name of person who placed order
