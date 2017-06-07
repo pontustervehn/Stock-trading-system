@@ -81,6 +81,11 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
       $scope.orders = data.list;
     });
 
+    $scope.trades = [];
+    http.get("/tradeList", function(data) {
+      $scope.trades = data.list;
+    });
+
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
       $location.hash("");

@@ -7,6 +7,7 @@ var model = require("./model.js");
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::
 var securitymodel = require("./securitymodel.js");
 var order = require("./order.js");
+var trade = require('./trade.js');
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 router.get('/roomlist', function (req, res) {
@@ -65,13 +66,22 @@ router.get('/order/:order', function (req, res) {
   res.json({list:messages});
 });
 
-/*
-router.post('/addOrder', function (req, res) {
-  console.log("Inne i  post/addOrder i controller.js, innan");
-  order.addOrder();
-  console.log("Inne i  post/addOrder i controller.js, efter");
-});*/
+//------------------------------------------------------------------------------
 
+router.get('/tradelist', function (req, res) {
+  var trades = trade.getTrades();
+  var tradeNames = [];
+  for (var i = 0; i < trades.length; i++) {
+    //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
+    tradeNames.push(trades[i]);
+  }
+  res.json({list:tradeNames});
+});
+
+router.get('/trade/:trade', function (req, res) {
+  var messages = order.findTrade(req.params.order).messages;
+  res.json({list:messages});
+});
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

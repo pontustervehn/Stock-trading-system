@@ -15,9 +15,9 @@ console.log("order orderID: "+ orderID);
  * Creates a security with the given name.
  * @param {String} name -
  */
-function Order(orderId, uID, type, sec, amt, price, date) {
+function Order(orderId, uName, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
-    this.userId = uID;     //userid/name of person who placed order
+    this.userName = uName;     //userName/name of person who placed order
     this.type = type;       //buying or selling
     this.security = sec;   //name of security in order
     this.amount = amt;     //amount of securities in order
@@ -39,7 +39,7 @@ exports.addOrder = function (uID, type, sec, amt, price) {
   orderList.push(newOrder);
   orderID = orderID+=1;
   //console.log("orderid after adding a new order: " + orderID);
-  console.log("\nAdded new order: " + newOrder.orderId+ " " + newOrder.userId + " " + newOrder.type + " " + newOrder.security+ " " + newOrder.amount+ " " + newOrder.price+ " " + newOrder.dateAdded + "\n");
+  console.log("\nAdded new order: " + newOrder.orderId+ " " + newOrder.userName + " " + newOrder.type + " " + newOrder.security+ " " + newOrder.amount+ " " + newOrder.price+ " " + newOrder.dateAdded + "\n");
 };
 
 

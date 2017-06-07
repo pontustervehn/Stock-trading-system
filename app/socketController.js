@@ -85,7 +85,7 @@ socket.on('placeorder', function (req) {
       var orders = order.getOrders();
 
       for (var i = 0; i < orders.length; i+=1) { //ändrade från i++
-        console.log("Inne i for-loopen");
+        //console.log("Inne i for-loopen");
         var newAmount = 0;
         //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
         if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price)){
@@ -94,6 +94,16 @@ socket.on('placeorder', function (req) {
             io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, 0);
             noOrderMatches = false;
+
+            console.log("\nAdding order to completed trades..\n");
+            if (type === "buying"){
+            io.to(secname,uname,orders[i].userName,amount, price).emit('placeorder', req);
+            trade.addTrade(secname,uname,orders[i].userName,amount, price);
+            } else {
+            io.to(secname,orders[i].userName,uname,amount, price).emit('placeorder', req);
+            trade.addTrade(secname,orders[i].userName,uname,amount, price);
+            }
+//exports.addTrade = function (sec, b, s, amt, pri) {
             break;
 
           } else if (orders[i].amount>amount) {
@@ -103,15 +113,35 @@ socket.on('placeorder', function (req) {
             io.to(order.getOrders()[i].orderId, newAmount).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, newAmount);
             noOrderMatches = false;
+
+            console.log("\nAdding order to completed trades..\n");
+            if (type === "buying"){
+            io.to(secname,uname,orders[i].userName,amount, price).emit('placeorder', req);
+            trade.addTrade(secname,uname,orders[i].userName,amount, price);
+            } else {
+            io.to(secname,orders[i].userName,uname,amount, price).emit('placeorder', req);
+            trade.addTrade(secname,orders[i].userName,uname,amount, price);
+            }
+
             break;
 
           } else if ((orders[i].amount<amount) && (orders[i].amount>0)) {
             //add or send info to completed trades
+            var originalAmount = orders[i].amount;
             newAmount = amount - orders[i].amount;
             console.log("Setting " + orders[i].type + "-order amount to 0");
             io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, 0);
             noOrderMatches = false;
+
+            console.log("\nAdding order to completed trades..\n");
+            if (type === "buying"){
+            io.to(secname,uname,orders[i].userName,originalAmount, price).emit('placeorder', req);
+            trade.addTrade(secname,uname,orders[i].userName,originalAmount, price);
+            } else {
+            io.to(secname,orders[i].userName,uname,originalAmount, price).emit('placeorder', req);
+            trade.addTrade(secname,orders[i].userName,uname,originalAmount, price);
+            }
 
             orderCheck(newAmount); //Låter orderCheck gå om med ny (lowered) amount
 

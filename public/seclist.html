@@ -42,7 +42,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="order in orders">
-          <td>{{order.userId}}</td>
+          <td>{{order.userName}}</td>
           <td>{{order.type}}</td>
           <td>{{order.amount}}</td>
           <td>{{order.price}}</td>
@@ -65,10 +65,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            LOL.
-          </td>
+        <tr ng-repeat="trade in trades">
+          <td>{{trade.buyer}}</td>
+          <td>{{trade.seller}}</td>
+          <td>{{trade.amount}}</td>
+          <td>{{trade.price}}</td>
+          <td>{{trade.date}}</td>
         </tr>
       </tbody>
     </table>
