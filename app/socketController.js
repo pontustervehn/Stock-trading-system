@@ -6,6 +6,7 @@ var model = require('./model.js');
 //:::::::::::::::::::::::::::::::::::::::::::::::::::
 var securitymodel = require('./securitymodel.js');
 var order = require('./order.js');
+var trade = require('./trade.js');
 //:::::::::::::::::::::::::::::::::::::::::::::::::::
 
 module.exports = function (socket, io) {

@@ -37,7 +37,8 @@ model.addRoom("test2");
 model.addRoom("Random-Room");
 
 var securitymodel = require('./securitymodel.js');
-var ordermodel = require('./order.js');
+var order = require('./order.js');
+var trade = require('./trade.js');
 
 httpServer.listen(port, function () {
   console.log("server listening on port", port);
