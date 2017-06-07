@@ -38,8 +38,8 @@ exports.addOrder = function (uID, type, sec, amt, price) {
   var newOrder = new Order(id, uID, type, sec, amt, price, date);
   orderList.push(newOrder);
   orderID = orderID+=1;
-  console.log("orderid after adding a new order: " + orderID);
-  console.log("Added new order: " + newOrder.orderId+ " " + newOrder.userId + " " + newOrder.type + " " + newOrder.security+ " " + newOrder.amount+ " " + newOrder.price+ " " + newOrder.dateAdded);
+  //console.log("orderid after adding a new order: " + orderID);
+  console.log("\nAdded new order: " + newOrder.orderId+ " " + newOrder.userId + " " + newOrder.type + " " + newOrder.security+ " " + newOrder.amount+ " " + newOrder.price+ " " + newOrder.dateAdded + "\n");
 };
 
 
@@ -54,8 +54,10 @@ exports.getOrders = function() {
  * Removes the order object with the matching name.
  * @param {String} name - The name of the order.
  */
+
 exports.removeOrder = function(id){
-  for (var i = 0; i < orderList.length; i++) {
+  for (var i = orderList.length-1; i >= 0; i--) {  //REVERSE ORDER TO KEEP RIGHT INDEXIS AND NOT SKIP POSTS
+  //for (var i = 0; i < orderList.length; i++) {  //WAS NOT IN REVERSE ORDER
     var order = orderList[i];
     if (order.orderId === id) {
       orderList.splice(i, 1);
@@ -74,7 +76,7 @@ exports.removeOrder = function(id){
 exports.updateOrder = function(id, amt){
  for (var i = 0; i < orderList.length; i++) {
    var order = orderList[i];
-   if (order.name === id) {
+   if (order.orderId === id) {
      order.amount = amt;
      break;
    }

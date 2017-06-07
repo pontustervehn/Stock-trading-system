@@ -71,7 +71,7 @@ socket.on('placeorder', function (req) {
     req.username = "Anonymous";
   } else {}
   //socket.emit("placeorder", {amount:$scope.buyamount, price:$scope.buyprice, username:user.getName(), secname:$scope.security});
-  console.log("You added " +req.type+ "-order: \nAmount: " + req.amount + "\nPrice: " + req.price + "\nUsername: " + req.username + "\nSecurityname: " + req.secname);
+  console.log("\nYou added " +req.type+ "-order: Amount: " + req.amount + " Price: " + req.price + " Username: " + req.username + " Securityname: " + req.secname + "\n");
   var uname = req.username;
   var type = req.type
   var secname = req.secname;
@@ -84,6 +84,8 @@ socket.on('placeorder', function (req) {
 
   //TO-DO: MÅSTE HANTERA INDEX SOM ÄNDRAS MED TIDEN UNDER LOOPENS GÅNG
 
+  function orderCheck(amount) {
+
   var noOrderMatches = true
 
   if (order.getOrders().length <= 0){
@@ -93,63 +95,94 @@ socket.on('placeorder', function (req) {
     noOrderMatches = false;
   } else {
 
-//  function orderLoop(orders) {
-  for (var i = 0; i < order.getOrders().length; i+=1) { //ändrade från i++
-    console.log("Inne i for-loopen");
-    //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-    if ((order.getOrders()[i].security===secname) && (order.getOrders()[i].type!==type) && (order.getOrders()[i].price === price)){
+    var orders = order.getOrders();
 
-      if (order.getOrders()[i].amount===amount){
-        //add or send info to completed trades
-        console.log("Removing " + order.getOrders()[i].type + "-order");
-        io.to(order.getOrders()[i].orderId).emit('placeorder', req);
-        order.removeOrder(order.getOrders()[i].orderId);
-        console.log("breaking loop at first if");
-        noOrderMatches = false;
-        break;
 
-      } else if (order.getOrders()[i].amount>amount) {
-        //add or send info to completed trades
-        var newAmount = order.getOrders()[i].amount - amount;
-        console.log("Updating " + order.getOrders()[i].type + "-order");
-        io.to(order.getOrders()[i].orderId, newAmount).emit('placeorder', req);
-        order.updateOrder(order.getOrders()[i].orderId, newAmount);
-        console.log("breaking loop at second if");
-        noOrderMatches = false;
-        break;
+    for (var i = 0; i < orders.length; i+=1) { //ändrade från i++
+      console.log("Inne i for-loopen");
+      var newAmount = 0;
+      //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
+      if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price)){
 
-      } else if (order.getOrders()[i].amount<amount) {
-        //add or send info to completed trades
-        var newAmount2 = amount - order.getOrders()[i].amount;
+        if (orders[i].amount===amount){
+          //add or send info to completed trades
 
-        console.log("Removing " + order.getOrders()[i].type + "-order");
-        io.to(order.getOrders()[i].orderId).emit('placeorder', req);
-        order.removeOrder(order.getOrders()[i].orderId);
-        console.log("Adding " + type + "-order with lowered amount");
-        io.to(uname, type, secname, newAmount2, price).emit('placeorder', req);
-        order.addOrder(uname, type, secname, newAmount2, price);
-        noOrderMatches = false;
-        console.log("Continuing loop at third if");
-        orderLoop(order.getOrders());
+          //console.log("Removing " + order.getOrders()[i].type + "-order");
+          //io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+          //order.removeOrder(order.getOrders()[i].orderId);
+          console.log("Setting " + orders.type + "-order amount to 0");
+          io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
+          order.updateOrder(order.getOrders()[i].orderId, 0);
 
+          console.log("breaking loop at first if");
+          noOrderMatches = false;
+          break;
+
+        } else if (orders[i].amount>amount) {
+          //add or send info to completed trades
+          newAmount = orders[i].amount - amount;
+          console.log("Updating " + orders[i].type + "-order");
+          io.to(order.getOrders()[i].orderId, newAmount).emit('placeorder', req);
+          order.updateOrder(order.getOrders()[i].orderId, newAmount);
+          console.log("breaking loop at second if");
+          noOrderMatches = false;
+          break;
+
+        } else if ((orders[i].amount<amount) && (orders[i].amount>0)) {
+          //add or send info to completed trades
+
+          newAmount = amount - orders[i].amount;
+          //console.log("Removing " + order.getOrders()[i].type + "-order");
+          //io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+          //order.removeOrder(order.getOrders()[i].orderId);
+
+          console.log("Setting " + orders[i].type + "-order amount to 0");
+          io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
+          order.updateOrder(order.getOrders()[i].orderId, 0);
+
+          //MÅSTE GÖRAS ITERATIV. EN CHECK SOM KOLLAR OM DET FINNS MATCHER. NU ADDAR DEN BARA
+
+
+          //console.log("Adding new" + type + "-order with lowered amount");
+          //io.to(uname, type, secname, newAmount, price).emit('placeorder', req);
+          //order.addOrder(uname, type, secname, newAmount, price);
+          noOrderMatches = false;
+          console.log("Continuing loop at third if");
+          //orders = order.getOrders();
+          orderCheck(newAmount); //Låter orderLoop gå om med ny amount
+
+      } else {}
     } else {}
 
-  } else {}
+  }
+}
 
-
-//}//end orderloop definition
 //orderLoop(orders);
-}}
 
+if (noOrderMatches){
+  console.log("runs if noOrdermatches");
+  io.to(uname, type, secname, amount, price).emit('placeorder', req);
+  order.addOrder(uname, type, secname, amount, price);
+  //console.log("breaking loop at else");
+} else {}
 
-  if (noOrderMatches){
-    console.log("runs if no=rdermatches");
-    io.to(uname, type, secname, amount, price).emit('placeorder', req);
-    order.addOrder(uname, type, secname, amount, price);
-    console.log("breaking loop at else");
+noOrderMatches = true;
+
+console.log("Reached Zero-remover!");
+for (var i = 0; i < order.getOrders().length; i+=1) {
+  if (order.getOrders()[i].amount===0){
+    console.log("Removing zero-amount " + order.getOrders()[i].type + "-order");
+    io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+    order.removeOrder(order.getOrders()[i].orderId);
   } else {}
+}
 
-  noOrderMatches = true;
+
+return
+}
+
+orderCheck(amount);
+
 
 /*function Order(orderId, uID, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
@@ -163,6 +196,7 @@ socket.on('placeorder', function (req) {
 
 //  io.to(uname, type, secname, amount, price).emit('placeorder', req);
 //  order.addOrder(uname, type, secname, amount, price);
+
 });
 
 
