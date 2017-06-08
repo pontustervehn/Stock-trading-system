@@ -116,6 +116,7 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
           });
         });*/
 
+    /*
     $scope.orders = [];
     http.get("/orderList", function(data) {
       $scope.orders = data.list;
@@ -124,7 +125,7 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
     $scope.trades = [];
     http.get("/tradeList", function(data) {
       $scope.trades = data.list;
-    });
+    });*/
 
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
@@ -177,10 +178,6 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
     $scope.mess = "";
     $scope.entries = [];
 
-    $scope.securities = [];
-    $scope.orders = [];
-    $scope.trades = [];
-
 
      //Lade till denna
     // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
@@ -188,6 +185,19 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
       $scope.entries = data.list;
       socket.emit("secjoin", {name:$scope.security, username: user.getName()});
     });
+
+    $scope.orders = [];
+    http.get("/orderList", function(data) {
+      $scope.orders = data.list;
+    });
+
+    $scope.trades = [];
+    http.get("/tradeList", function(data) {
+      $scope.trades = data.list;
+    });
+
+
+
     var socket = io().connect();
 
     socket.on('addsec', function (data) {
@@ -203,11 +213,19 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     socket.on('placeorder', function (data) {
       console.log("Inne i placeorder socket.on i controllers.js");
+      console.log("Med följande data: " + data.username + data.type + data.secname + data.amount + data.price);
+      var date = "31 june";
       $scope.$apply(function(){
-        $scope.orders.push(data.securityName);
+        //$scope.orders.push(data.securityName);
+
+        http.get("/orderList", function(data) {
+          $scope.orders = data.list;
+        });
+
+
+        //$scope.orders.push(data.username, data.type, data.amount, data.price, date);
       });
     });
-
 
     socket.on('secupdate', function (data) {
       $scope.$apply(function(){
@@ -224,6 +242,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
         //$scope.entries.push(data.username + " joined the channel");
       });
     });
+
 
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
@@ -262,7 +281,6 @@ chattControllers.controller('addController', ['$scope', 'HttpService', '$locatio
 
 chattControllers.controller('aboutController', ['$scope',
   function($scope) {
-
   }
 ]);
 
@@ -277,7 +295,6 @@ chattControllers.controller('loginController', ['$scope', 'HttpService', '$locat
         $location.path('seclist');
       });
     };
-
   }
 ]);
 

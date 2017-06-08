@@ -47,38 +47,16 @@ module.exports = function (socket, io) {
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// user joins room
-
 
 socket.on('addsec', function (req) {
-
   console.log("DDDDDD");
   console.log("Efter emitting från controllers.js, denna är i socketcontroller.js");
 
   console.log("You added Security: " + req.security);
-  var securityName = req.security;
-  io.to(securityName).emit('addsec', req);
-  securitymodel.addSecurity(securityName);
+  var secname = req.security;
+  io.to(secname).emit('addsec', req);
+  securitymodel.addSecurity(secname);
 });
-
-
-/*
-console.log(req);
-var name = req.name;
-var user = req.user;
-var security = securitymodel.findSecurity(name);
-// room.addUser(user);
-socket.join(name);
-console.log('A user ('+req.username+') joined ' + name);
-io.to(name).emit('secjoin', req);
-*/
-
-
-
-
-
-
-
 
 socket.on('placeorder', function (req) {
   if (req.username === ''){
@@ -97,7 +75,7 @@ socket.on('placeorder', function (req) {
 
     if (order.getOrders().length <= 0){
       console.log("Arrayen är tom. Lägger till första ordern.");
-      io.to(uname, type, secname, amount, price).emit('placeorder', req);
+      io.to(secname).emit('placeorder', req);
       order.addOrder(uname, type, secname, amount, price);
       noOrderMatches = false;
     } else {
@@ -117,10 +95,10 @@ socket.on('placeorder', function (req) {
 
             console.log("\nAdding order to completed trades..\n");
             if (type === "buying"){
-            io.to(secname,uname,orders[i].userName,amount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,uname,orders[i].userName,amount, price);
             } else {
-            io.to(secname,orders[i].userName,uname,amount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,orders[i].userName,uname,amount, price);
             }
 //exports.addTrade = function (sec, b, s, amt, pri) {
@@ -136,10 +114,10 @@ socket.on('placeorder', function (req) {
 
             console.log("\nAdding order to completed trades..\n");
             if (type === "buying"){
-            io.to(secname,uname,orders[i].userName,amount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,uname,orders[i].userName,amount, price);
             } else {
-            io.to(secname,orders[i].userName,uname,amount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,orders[i].userName,uname,amount, price);
             }
 
@@ -150,16 +128,16 @@ socket.on('placeorder', function (req) {
             var originalAmount = orders[i].amount;
             newAmount = amount - orders[i].amount;
             console.log("Setting " + orders[i].type + "-order amount to 0");
-            io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
+            io.to(order.getOrders()[i].orderId).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, 0);
             noOrderMatches = false;
 
             console.log("\nAdding order to completed trades..\n");
             if (type === "buying"){
-            io.to(secname,uname,orders[i].userName,originalAmount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,uname,orders[i].userName,originalAmount, price);
             } else {
-            io.to(secname,orders[i].userName,uname,originalAmount, price).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             trade.addTrade(secname,orders[i].userName,uname,originalAmount, price);
             }
 
@@ -173,7 +151,7 @@ socket.on('placeorder', function (req) {
 
   if (noOrderMatches){
     console.log("runs if noOrdermatches");
-    io.to(uname, type, secname, amount, price).emit('placeorder', req);
+    io.to(uname).emit('placeorder', req);
     order.addOrder(uname, type, secname, amount, price);
     //console.log("breaking loop at else");
   } else {}
