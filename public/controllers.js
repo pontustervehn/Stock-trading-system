@@ -247,6 +247,13 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
     });
 
 
+    $scope.back = function(address) {
+      $location.hash("");
+      $location.path('/' + address);
+      $scope.location = $location.path();
+      console.log("location = " + $scope.location);
+    };
+
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
       $location.hash("");
