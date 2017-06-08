@@ -50,21 +50,25 @@ router.post('/addSecurity', function (req, res) {
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-router.get('/orderlist', function (req, res) {
+router.get('/orderlist/:secname', function (req, res) {
   var orders = order.getOrders();
   var orderIds = [];
+  //console.log("\n\n OBS!!!!!!!!!!!!!!!!!!" + req.params.secname + " !!!!!!!!!!!");
   for (var i = 0; i < orders.length; i++) {
     //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-    orderIds.push(orders[i]);
+
+    if (orders[i].security === req.params.secname){
+      orderIds.push(orders[i]);
+    }
   }
   res.json({list:orderIds});
 });
 
-
+/*
 router.get('/order/:order', function (req, res) {
   var messages = order.findOrder(req.params.order).messages;
   res.json({list:messages});
-});
+});*/
 
 //------------------------------------------------------------------------------
 

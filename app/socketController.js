@@ -89,7 +89,7 @@ socket.on('placeorder', function (req) {
         if ((orders[i].security===secname) && (orders[i].type!==type) && (orders[i].price === price)){
           if (orders[i].amount===amount){
             console.log("Setting " + orders.type + "-order amount to 0");
-            io.to(order.getOrders()[i].orderId, 0).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, 0);
             noOrderMatches = false;
 
@@ -108,7 +108,7 @@ socket.on('placeorder', function (req) {
             //add or send info to completed trades
             newAmount = orders[i].amount - amount;
             console.log("Updating " + orders[i].type + "-order");
-            io.to(order.getOrders()[i].orderId, newAmount).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, newAmount);
             noOrderMatches = false;
 
@@ -128,7 +128,7 @@ socket.on('placeorder', function (req) {
             var originalAmount = orders[i].amount;
             newAmount = amount - orders[i].amount;
             console.log("Setting " + orders[i].type + "-order amount to 0");
-            io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+            io.to(secname).emit('placeorder', req);
             order.updateOrder(order.getOrders()[i].orderId, 0);
             noOrderMatches = false;
 
@@ -151,7 +151,7 @@ socket.on('placeorder', function (req) {
 
   if (noOrderMatches){
     console.log("runs if noOrdermatches");
-    io.to(uname).emit('placeorder', req);
+    io.to(secname).emit('placeorder', req);
     order.addOrder(uname, type, secname, amount, price);
     //console.log("breaking loop at else");
   } else {}
@@ -162,7 +162,7 @@ socket.on('placeorder', function (req) {
   for (var i = 0; i < order.getOrders().length; i+=1) {
     if (order.getOrders()[i].amount===0){
       console.log("Removing zero-amount " + order.getOrders()[i].type + "-order");
-      io.to(order.getOrders()[i].orderId).emit('placeorder', req);
+      io.to(secname).emit('placeorder', req);
       order.removeOrder(order.getOrders()[i].orderId);
     } else {}
   }

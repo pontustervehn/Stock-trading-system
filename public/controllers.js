@@ -186,8 +186,9 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
       socket.emit("secjoin", {name:$scope.security, username: user.getName()});
     });
 
+
     $scope.orders = [];
-    http.get("/orderList", function(data) {
+    http.get("/orderList/"+$scope.security, function(data) {
       $scope.orders = data.list;
     });
 
@@ -218,8 +219,14 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
       $scope.$apply(function(){
         //$scope.orders.push(data.securityName);
 
-        http.get("/orderList", function(data) {
+        $scope.orders = [];
+        http.get("/orderList/"+$scope.security, function(data) {
           $scope.orders = data.list;
+        });
+
+
+        http.get("/tradeList", function(data) {
+          $scope.trades = data.list;
         });
 
 
