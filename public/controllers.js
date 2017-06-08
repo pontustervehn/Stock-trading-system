@@ -28,7 +28,9 @@ chattControllers.controller('roomController', ['$scope', 'HttpService', '$routeP
     var socket = io().connect();
 
     socket.on('update', function (data) {
+      console.log("YYYYYY");
       $scope.$apply(function(){
+        console.log("ZZZZZZ");
         console.log("update");
         console.log(data);
         $scope.entries.push(data.username + ": " + data.update);
@@ -50,6 +52,7 @@ chattControllers.controller('roomController', ['$scope', 'HttpService', '$routeP
     };
 
     $scope.done = function() {
+      console.log("ÅÅÅÅÅÅ");
       console.log("Reached done()");
       socket.emit("update", {room:$scope.room, update:$scope.mess, username:user.getName()});
       $scope.mess = "";
@@ -58,13 +61,9 @@ chattControllers.controller('roomController', ['$scope', 'HttpService', '$routeP
   }
 ]);
 
-
-
 //-------------------------------------------------------------------------------------------------
 //added below part
 //-------------------------------------------------------------------------------------------------
-
-
 
 chattControllers.controller('seclistController', ['$scope', '$location',  'HttpService', 'UserService',
   function($scope, $location, http, user) {
@@ -75,6 +74,47 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
     http.get("/securityList", function(data) {
       $scope.securities = data.list;
     });
+
+/*
+    socket.on('addsec', function (data) {
+      console.log("BBBBBB");
+      console.log("Inne i add sec socket on i controllers.js");
+      $scope.$apply(function(){
+        console.log("CCCCCC");
+        console.log("Pushar " + data.securityName + "till securities scope.");
+
+        $scope.securities.push(data.securityName);
+      });
+    });
+    */
+
+    /*
+    socket.on('addsec', function (data) {
+    $scope.$apply(function(){
+        console.log("\nPushing to securities\n");
+        $scope.securities.push(data.name);
+      });
+    });
+    */
+
+    /*
+    chattControllers.controller('securityController', ['$scope', 'HttpService', '$routeParams', 'UserService',
+      function($scope, http, $routeParams, user) {
+        $scope.security = $routeParams.security;
+        $scope.mess = "";
+        $scope.entries = [];
+        // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
+        http.get("/security/"+$scope.security, function(data) {
+          $scope.entries = data.list;
+          socket.emit("secjoin", {name:$scope.security, username: user.getName()});
+        });
+        var socket = io().connect();
+
+        socket.on('addsec', function (data) {
+          $scope.$apply(function(){
+            $scope.securities.push(data.secname);
+          });
+        });*/
 
     $scope.orders = [];
     http.get("/orderList", function(data) {
@@ -93,24 +133,41 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
     };
 
     $scope.secdone = function() {
-      console.log("Reached secdone()");
+      console.log("AAAAAA");
+      console.log("Reached secdone() function");
+      console.log("emitting addsec for " + $scope.sec);
+      socket.emit("addsec", {security:$scope.sec});
+      //socket.emit("updateseclist", {room:$scope.room}); // Lade till denna
+      $scope.sec = "";
+
+
       /*$http({
         method: 'POST',
         url: '/API',
         data: {'security': $scope.sec},
         headers: {'Content-Type': 'application/json'}
       })*/
-
-
       //socket.on('addsec', function (data) {
       //});
 
-
-      console.log($scope.sec);
-      socket.emit("addsec", {security:$scope.sec});
-      $scope.sec = "";
       //$location.path('about');
     };
+
+//------------------------------------------
+/*
+    socket.on('addsec', function (req) {
+      console.log("You added Security: " + req.security);
+      var securityName = req.security;
+      io.to(securityName).emit('addsec', req);
+      securitymodel.addSecurity(securityName);
+    });
+    socket.on('addsec', function (data) {
+        console.log("\nPushing to securities\n");
+        $scope.securities.push(data.username);
+    });
+*/
+//------------------------------------------
+
   }
 ]);
 
@@ -119,12 +176,38 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
     $scope.security = $routeParams.security;
     $scope.mess = "";
     $scope.entries = [];
+
+    $scope.securities = [];
+    $scope.orders = [];
+    $scope.trades = [];
+
+
+     //Lade till denna
     // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
     http.get("/security/"+$scope.security, function(data) {
       $scope.entries = data.list;
       socket.emit("secjoin", {name:$scope.security, username: user.getName()});
     });
     var socket = io().connect();
+
+    socket.on('addsec', function (data) {
+      console.log("BBBBBB");
+      console.log("Inne i add sec socket.on i controllers.js");
+      $scope.$apply(function(){
+        console.log("CCCCCC");
+        console.log("Pushar " + data.securityName + "till securities scope.");
+
+        $scope.securities.push(data.securityName);
+      });
+    });
+
+    socket.on('placeorder', function (data) {
+      console.log("Inne i placeorder socket.on i controllers.js");
+      $scope.$apply(function(){
+        $scope.orders.push(data.securityName);
+      });
+    });
+
 
     socket.on('secupdate', function (data) {
       $scope.$apply(function(){
@@ -136,9 +219,9 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     socket.on('secjoin', function (data) {
       $scope.$apply(function(){
-        console.log("join");
+        console.log(" inside secjoin in controllers.js");
         console.log(data);
-        $scope.entries.push(data.username + " joined the channel");
+        //$scope.entries.push(data.username + " joined the channel");
       });
     });
 
@@ -158,7 +241,6 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
   }
 ]);
 
-
 /*
 chattControllers.controller('addController', ['$scope', 'HttpService', '$location', 'UserService',
   function($scope, http, $location, user) {
@@ -173,12 +255,7 @@ chattControllers.controller('addController', ['$scope', 'HttpService', '$locatio
     };
   }*/
 
-
-
-
 //]);
-
-
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
@@ -193,7 +270,7 @@ chattControllers.controller('loginController', ['$scope', 'HttpService', '$locat
   function($scope, http, $location, user) {
     $scope.name = "";
     $scope.done = function() {
-      console.log("Reached done()");
+      console.log("Logged in as " + $scope.name);
       http.post('setUser', {realname: $scope.name}, function(response) {
         console.log(response);
         user.setName($scope.name);

@@ -27,16 +27,11 @@ module.exports = function (socket, io) {
   // user gets updated
   socket.on('update', function (req) {
     console.log(req);
+    console.log("XXXXXX");
     var roomName = req.room;
     io.to(roomName).emit('update', req);
     var room = model.findRoom(roomName);
     room.addMessage(req.username + ": " + req.update);
-    if (req.update=="testing123") {
-      room.addMessage("YEAAAH BABY!");
-    } else {
-    }
-    console.log("YEAAAH");
-
   });
 
   // user leaves room
@@ -52,13 +47,38 @@ module.exports = function (socket, io) {
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// user joins room
+
 
 socket.on('addsec', function (req) {
+
+  console.log("DDDDDD");
+  console.log("Efter emitting från controllers.js, denna är i socketcontroller.js");
+
   console.log("You added Security: " + req.security);
   var securityName = req.security;
   io.to(securityName).emit('addsec', req);
   securitymodel.addSecurity(securityName);
 });
+
+
+/*
+console.log(req);
+var name = req.name;
+var user = req.user;
+var security = securitymodel.findSecurity(name);
+// room.addUser(user);
+socket.join(name);
+console.log('A user ('+req.username+') joined ' + name);
+io.to(name).emit('secjoin', req);
+*/
+
+
+
+
+
+
+
 
 socket.on('placeorder', function (req) {
   if (req.username === ''){

@@ -34,7 +34,6 @@ io.on('connection', function (socket) {
 var model = require('./model.js');
 model.addRoom("test1");
 model.addRoom("test2");
-model.addRoom("Random-Room");
 
 var securitymodel = require('./securitymodel.js');
 var order = require('./order.js');

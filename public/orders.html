@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="col-md-4">
+    <h4>Active orders</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Price</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="order in orders">
+          <td>{{order.userName}}</td>
+          <td>{{order.type}}</td>
+          <td>{{order.amount}}</td>
+          <td>{{order.price}}</td>
+          <td>{{order.dateAdded}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

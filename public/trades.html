@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="col-md-4">
+    <h4>Completed trades</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Buyer</th>
+          <th>Seller</th>
+          <th>Amount</th>
+          <th>Price</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="trade in trades">
+          <td>{{trade.buyer}}</td>
+          <td>{{trade.seller}}</td>
+          <td>{{trade.amount}}</td>
+          <td>{{trade.price}}</td>
+          <td>{{trade.date}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
