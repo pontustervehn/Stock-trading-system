@@ -1,20 +1,10 @@
 /* jslint node: true */
 "use strict";
 
-/**
- * A module that contains the order object!
- * @module orderSystem
- */
-
 var orderList = [];
 var orderID = 0;
 console.log("order orderID: "+ orderID);
 
-
-/**
- * Creates a security with the given name.
- * @param {String} name -
- */
 function Order(orderId, uName, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
     this.userName = uName;     //userName/name of person who placed order
@@ -24,13 +14,6 @@ function Order(orderId, uName, type, sec, amt, price, date) {
     this.price = price;      //price per security in order
     this.dateAdded = date;  //when the order was made, loop through (compare) earlier orders first
     }
-
-
-/**
- * Creates a security with the given name.
- * @param {String} name - The name of  the security.
- */
-
 
 exports.addOrder = function (uID, type, sec, amt, price) {
   var id = orderID;
@@ -42,18 +25,9 @@ exports.addOrder = function (uID, type, sec, amt, price) {
   console.log("\nAdded new order: " + newOrder.orderId+ " " + newOrder.userName + " " + newOrder.type + " " + newOrder.security+ " " + newOrder.amount+ " " + newOrder.price+ " " + newOrder.dateAdded + "\n");
 };
 
-
-/**
- * Returns all the Securities.
- */
 exports.getOrders = function() {
   return orderList;
 };
-
-/**
- * Removes the order object with the matching name.
- * @param {String} name - The name of the order.
- */
 
 exports.removeOrder = function(id){
   for (var i = orderList.length-1; i >= 0; i--) {  //REVERSE ORDER TO KEEP RIGHT INDEXIS AND NOT SKIP POSTS
@@ -67,12 +41,6 @@ exports.removeOrder = function(id){
   }
 };
 
-//items.splice(2, 1, 1010); replaces object at index 2 with the entry 1010
-
-/**
- * Removes the security object with the matching name.
- * @param {String} name - The name of the security.
- */
 exports.updateOrder = function(id, amt){
  for (var i = 0; i < orderList.length; i++) {
    var order = orderList[i];
@@ -82,10 +50,7 @@ exports.updateOrder = function(id, amt){
    }
  }
 };
-/**
- * Return the security object with the matching name.
- * @param {String} name - The name of the security.
- */
+
 exports.findOrder = function(name) {
   for (var i = 0; i < orderList.length; i++) {
     if (orderList[i].name === name) {

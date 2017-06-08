@@ -24,7 +24,6 @@ router.get('/room/:room', function (req, res) {
   res.json({list:messages});
 });
 
-
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 router.get('/securitylist', function (req, res) {
   var securities = securitymodel.getSecurities();
@@ -36,27 +35,15 @@ router.get('/securitylist', function (req, res) {
 });
 
 router.get('/security/:security', function (req, res) {
-  var messages = securitymodel.findSecurity(req.params.security).messages;
+  var messages = model.findSecurity(req.params.security).messages;
   res.json({list:messages});
 });
 
-/*
-router.post('/addSecurity', function (req, res) {
-  console.log("Inne i  post/addSecurity i controller.js, innan");
-  securitymodel.addSecurity();
-  console.log("Inne i  post/addSecurity i controller.js, efter");
-  //res.json({name:"Anon"});
-});*/
-
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 router.get('/orderlist/:secname', function (req, res) {
   var orders = order.getOrders();
   var orderIds = [];
-  //console.log("\n\n OBS!!!!!!!!!!!!!!!!!!" + req.params.secname + " !!!!!!!!!!!");
   for (var i = 0; i < orders.length; i++) {
-    //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-
     if (orders[i].security === req.params.secname){
       orderIds.push(orders[i]);
     }
@@ -64,31 +51,18 @@ router.get('/orderlist/:secname', function (req, res) {
   res.json({list:orderIds});
 });
 
-/*
-router.get('/order/:order', function (req, res) {
-  var messages = order.findOrder(req.params.order).messages;
-  res.json({list:messages});
-});*/
-
-//------------------------------------------------------------------------------
-
-router.get('/tradelist', function (req, res) {
+router.get('/tradelist/:secname', function (req, res) {
   var trades = trade.getTrades();
   var tradeNames = [];
   for (var i = 0; i < trades.length; i++) {
-    //Kanske lägg till if-sats här för att kolla så att order.secname matchar rätt security för view
-    tradeNames.push(trades[i]);
+    if (trades[i].security === req.params.secname){
+      tradeNames.push(trades[i]);
+    }
   }
   res.json({list:tradeNames});
 });
 
-router.get('/trade/:trade', function (req, res) {
-  var messages = order.findTrade(req.params.order).messages;
-  res.json({list:messages});
-});
-
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 router.post('/setUser', function (req, res) {
   res.json({name:"Anon"});
 });

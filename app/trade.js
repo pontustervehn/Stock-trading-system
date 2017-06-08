@@ -1,11 +1,6 @@
 /* jslint node: true */
 "use strict";
 
-/**
- * A module that contains the security object!
- * @module securitySystem
- */
-
 var tradeList = [];
 
 function Trade(sec, b, s, amt, pri, date) {

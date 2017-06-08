@@ -176,16 +176,6 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
   function($scope, http, $routeParams, user) {
     $scope.security = $routeParams.security;
     $scope.mess = "";
-    $scope.entries = [];
-
-
-     //Lade till denna
-    // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
-    http.get("/security/"+$scope.security, function(data) {
-      $scope.entries = data.list;
-      socket.emit("secjoin", {name:$scope.security, username: user.getName()});
-    });
-
 
     $scope.orders = [];
     http.get("/orderList/"+$scope.security, function(data) {
@@ -193,7 +183,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
     });
 
     $scope.trades = [];
-    http.get("/tradeList", function(data) {
+    http.get("/tradeList/"+$scope.security, function(data) {
       $scope.trades = data.list;
     });
 
@@ -219,17 +209,14 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
       $scope.$apply(function(){
         //$scope.orders.push(data.securityName);
 
-        $scope.orders = [];
+        //$scope.orders = [];
         http.get("/orderList/"+$scope.security, function(data) {
           $scope.orders = data.list;
         });
 
-
-        http.get("/tradeList", function(data) {
+        http.get("/tradeList/"+$scope.security, function(data) {
           $scope.trades = data.list;
         });
-
-
         //$scope.orders.push(data.username, data.type, data.amount, data.price, date);
       });
     });
@@ -267,25 +254,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
   }
 ]);
 
-/*
-chattControllers.controller('addController', ['$scope', 'HttpService', '$location', 'UserService',
-  function($scope, http, $location, user) {
-    $scope.name = "";
-    $scope.done = function() {
-      console.log("Reached done()");
-      http.post('addSecurity', {realname: $scope.name}, function(response) {
-        console.log(response);
-        user.setName($scope.name);
-        $location.path('seclist');
-      });
-    };
-  }*/
-
-//]);
-
 //-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
-
 chattControllers.controller('aboutController', ['$scope',
   function($scope) {
   }
@@ -316,6 +285,5 @@ chattControllers.controller('navigationController', ['$scope',  '$location',
       $scope.location = $location.path();
       console.log("location = " + $scope.location);
     };
-
   }
 ]);

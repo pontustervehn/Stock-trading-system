@@ -145,7 +145,6 @@ socket.on('placeorder', function (req) {
 
         } else {}
       } else {}
-
     }
   }
 
