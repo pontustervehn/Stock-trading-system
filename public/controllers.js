@@ -176,6 +176,15 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
   function($scope, http, $routeParams, user) {
     $scope.security = $routeParams.security;
     $scope.mess = "";
+    $scope.entries = [];
+
+
+      //Lade till denna
+     // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
+     http.get("/security/"+$scope.security, function(data) {
+     $scope.entries = data.list;
+     socket.emit("secjoin", {name:$scope.security, username: user.getName()});
+     });
 
     $scope.orders = [];
     http.get("/orderList/"+$scope.security, function(data) {
