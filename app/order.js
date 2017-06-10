@@ -16,7 +16,11 @@ function Order(orderId, uName, type, sec, amt, price, date) {
 
 exports.addOrder = function (uID, type, sec, amt, price) {
   var id = orderID;
-  var date = "1 june";
+  var dateObj = new Date();
+  var month = dateObj.getUTCMonth() + 1; //months from 1-12
+  var day = dateObj.getUTCDate();
+  var year = dateObj.getUTCFullYear();
+  var date = year + "/" + month + "/" + day;
   var newOrder = new Order(id, uID, type, sec, amt, price, date);
   orderList.push(newOrder);
   orderID = orderID+=1;

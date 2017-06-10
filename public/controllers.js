@@ -57,9 +57,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     var socket = io().connect();
 
-    socket.on('placeorder', function (data) {
-      console.log("Place order with following data: " + data.username + " " + data.type + " " +  data.secname + " " +  data.amount + " " +  data.price);
-      var date = "31 june";
+    socket.on('updateorderlist', function (data) {
       $scope.$apply(function(){
         http.get("/orderList/"+$scope.security, function(data) {
           $scope.orders = data.list;

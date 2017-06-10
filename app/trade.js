@@ -13,7 +13,12 @@ function Trade(sec, b, s, amt, pri, date) {
     }
 
 exports.addTrade = function (sec, b, s, amt, pri) {
-  var date = "2 june";
+  var dateObj = new Date();
+  var month = dateObj.getUTCMonth() + 1; //months from 1-12
+  var day = dateObj.getUTCDate();
+  var year = dateObj.getUTCFullYear();
+  var date = year + "/" + month + "/" + day;
+
   var newTrade = new Trade(sec, b, s, amt, pri, date);
   tradeList.push(newTrade);
 };
