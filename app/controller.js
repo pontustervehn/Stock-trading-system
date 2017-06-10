@@ -20,8 +20,8 @@ router.get('/securitylist', function (req, res) {
 
 
 router.get('/security/:security', function (req, res) {
-  //var messages = securitymodel.findSecurity(req.params.security).messages;
-  //res.json({list:messages});
+  var messages = securitymodel.findSecurity(req.params.security).messages;
+  res.json({list:messages});
 });
 
 router.get('/orderlist/:secname', function (req, res) {

@@ -122,7 +122,6 @@ socket.on('placeorder', function (req) {
   return
   }
 
-  //Runs orderCheck again with adjusted (lowered amount)
   orderCheck(amount);
 });
 

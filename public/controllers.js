@@ -57,7 +57,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     var socket = io().connect();
 
-    socket.on("placeorder", function (data) {
+    socket.on('placeorder', function (data) {
       console.log("Place order with following data: " + data.username + " " + data.type + " " +  data.secname + " " +  data.amount + " " +  data.price);
       var date = "31 june";
       $scope.$apply(function(){
@@ -83,7 +83,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
     };
 
     $scope.placeorder = function() {
-      socket.emit("placeorder", {type:$scope.type, amount:$scope.amount, price:$scope.price, username:user.getName(), secname:$scope.security});
+      socket.emit('placeorder', {type:$scope.type, amount:$scope.amount, price:$scope.price, username:user.getName(), secname:$scope.security});
       $scope.type = "";
       $scope.amount = "";
       $scope.price = "";
