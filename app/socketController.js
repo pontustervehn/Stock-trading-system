@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-var security = require('./security.js');
+var securitymodel = require('./security.js');
 var order = require('./order.js');
 var trade = require('./trade.js');
 
@@ -15,7 +15,7 @@ socket.on('addsec', function (req) {
   console.log("Added Security: " + req.security);
   var secname = req.security;
   io.to(secname).emit('addsec', req);
-  security.addSecurity(secname);
+  securitymodel.addSecurity(secname);
   io.to("seclist").emit('addsec', req);
 });
 
@@ -130,7 +130,7 @@ socket.on('secjoin', function (req) {
   console.log(req);
   var name = req.name;
   var user = req.user;
-  var security = security.findSecurity(name);
+  var security = securitymodel.findSecurity(name);
   socket.join(name);
   console.log('A user ('+req.username+') joined ' + name);
   io.to(name).emit('secjoin', req);
@@ -141,7 +141,7 @@ socket.on('secleave', function (req) {
   console.log(req);
   var name = req.name;
   var user = req.user;
-  var security = model.findSecurity(name);
+  var security = securitymodel.findSecurity(name);
   console.log('A user left ' + name);
   io.to(name).emit('secleave', user);
 });
