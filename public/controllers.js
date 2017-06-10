@@ -12,6 +12,7 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
     });
     socket.emit("joinseclist");
 
+    //Populates security list dynamically
     socket.on('addsec', function (data) {
       $scope.$apply(function(){
         http.get("/securityList", function(data) {

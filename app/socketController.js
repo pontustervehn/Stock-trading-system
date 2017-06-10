@@ -11,6 +11,7 @@ socket.on('joinseclist', function (req) {
   socket.join("seclist");
 });
 
+//Emits to socket channel that a security has been added
 socket.on('addsec', function (req) {
   console.log("Added Security: " + req.security);
   var secname = req.security;
@@ -19,6 +20,7 @@ socket.on('addsec', function (req) {
   io.to("seclist").emit('addsec', req);
 });
 
+//
 socket.on('placeorder', function (req) {
   if (req.username === ''){
     req.username = "Anonymous";
