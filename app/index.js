@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
   socketController(socket, io);
 });
 
-var securitymodel = require('./securitymodel.js');
+var security = require('./security.js');
 var order = require('./order.js');
 var trade = require('./trade.js');
 

@@ -4,13 +4,13 @@
 var express = require('express');
 var router = express.Router();
 
-var securitymodel = require("./securitymodel.js");
+var security = require("./security.js");
 var order = require("./order.js");
 var trade = require('./trade.js');
 
 
 router.get('/securitylist', function (req, res) {
-  var securities = securitymodel.getSecurities();
+  var securities = security.getSecurities();
   var securityNames = [];
   for (var i = 0; i < securities.length; i++) {
     securityNames.push(securities[i]);
@@ -20,7 +20,7 @@ router.get('/securitylist', function (req, res) {
 
 
 router.get('/security/:security', function (req, res) {
-  var names = securitymodel.findSecurity(req.params.security).names;
+  var names = security.findSecurity(req.params.security).names;
   res.json({list:names});
 });
 
