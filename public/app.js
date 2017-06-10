@@ -8,21 +8,9 @@
   app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/list', {
-        templateUrl: 'list.html',
-        controller: 'listController'
-      }).
-      when('/about', {
-        templateUrl: 'about.html',
-        controller: 'aboutController'
-      }).
       when('/login', {
         templateUrl: 'login.html',
         controller: 'loginController'
-      }).
-      when('/room/:room', {
-        templateUrl: 'room.html',
-        controller: 'roomController'
       }).
       when('/seclist', {
         templateUrl: 'seclist.html',
@@ -33,7 +21,7 @@
         controller: 'securityController'
       }).
       otherwise({
-        redirectTo: '/list'
+        redirectTo: '/seclist'
       });
   }]);
 })();

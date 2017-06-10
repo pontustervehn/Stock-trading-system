@@ -31,10 +31,6 @@ io.on('connection', function (socket) {
   socketController(socket, io);
 });
 
-var model = require('./model.js');
-model.addRoom("test1");
-model.addRoom("test2");
-
 var securitymodel = require('./securitymodel.js');
 var order = require('./order.js');
 var trade = require('./trade.js');

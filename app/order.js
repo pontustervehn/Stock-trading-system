@@ -3,7 +3,6 @@
 
 var orderList = [];
 var orderID = 0;
-console.log("order orderID: "+ orderID);
 
 function Order(orderId, uName, type, sec, amt, price, date) {
     this.orderId = orderId;    //unique orderid
