@@ -69,63 +69,23 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
   function($scope, $location, http, user) {
 
     var socket = io().connect();
+    //socket.join("seclist");
+
     $scope.sec = ""; //Lade till denna
     $scope.securities = [];
     http.get("/securityList", function(data) {
       $scope.securities = data.list;
     });
+    socket.emit("joinseclist");
 
-/*
     socket.on('addsec', function (data) {
-      console.log("BBBBBB");
-      console.log("Inne i add sec socket on i controllers.js");
       $scope.$apply(function(){
-        console.log("CCCCCC");
-        console.log("Pushar " + data.securityName + "till securities scope.");
-
-        $scope.securities.push(data.securityName);
+              http.get("/securityList", function(data) {
+                $scope.securities = data.list;
+              });
       });
     });
-    */
 
-    /*
-    socket.on('addsec', function (data) {
-    $scope.$apply(function(){
-        console.log("\nPushing to securities\n");
-        $scope.securities.push(data.name);
-      });
-    });
-    */
-
-    /*
-    chattControllers.controller('securityController', ['$scope', 'HttpService', '$routeParams', 'UserService',
-      function($scope, http, $routeParams, user) {
-        $scope.security = $routeParams.security;
-        $scope.mess = "";
-        $scope.entries = [];
-        // $scope.entries = ["always", "leaving", "from", "recieve", "me", "down"];
-        http.get("/security/"+$scope.security, function(data) {
-          $scope.entries = data.list;
-          socket.emit("secjoin", {name:$scope.security, username: user.getName()});
-        });
-        var socket = io().connect();
-
-        socket.on('addsec', function (data) {
-          $scope.$apply(function(){
-            $scope.securities.push(data.secname);
-          });
-        });*/
-
-    /*
-    $scope.orders = [];
-    http.get("/orderList", function(data) {
-      $scope.orders = data.list;
-    });
-
-    $scope.trades = [];
-    http.get("/tradeList", function(data) {
-      $scope.trades = data.list;
-    });*/
 
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
@@ -151,22 +111,6 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
 
       //$location.path('about');
     };
-
-//------------------------------------------
-/*
-    socket.on('addsec', function (req) {
-      console.log("You added Security: " + req.security);
-      var securityName = req.security;
-      io.to(securityName).emit('addsec', req);
-      securitymodel.addSecurity(securityName);
-    });
-    socket.on('addsec', function (data) {
-        console.log("\nPushing to securities\n");
-        $scope.securities.push(data.username);
-    });
-*/
-//------------------------------------------
-
   }
 ]);
 
@@ -198,6 +142,8 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     var socket = io().connect();
 
+
+/*
     socket.on('addsec', function (data) {
       console.log("BBBBBB");
       console.log("Inne i add sec socket.on i controllers.js");
@@ -208,6 +154,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
         $scope.securities.push(data.securityName);
       });
     });
+    */
 
     socket.on('placeorder', function (data) {
       console.log("Inne i placeorder socket.on i controllers.js");

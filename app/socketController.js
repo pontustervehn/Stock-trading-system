@@ -47,6 +47,12 @@ module.exports = function (socket, io) {
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+socket.on('joinseclist', function (req) {
+  console.log("Inne i joinseclist");
+  socket.join("seclist");
+});
+
+
 
 socket.on('addsec', function (req) {
   console.log("DDDDDD");
@@ -56,6 +62,9 @@ socket.on('addsec', function (req) {
   var secname = req.security;
   io.to(secname).emit('addsec', req);
   securitymodel.addSecurity(secname);
+
+  //socket.join("seclist");
+  io.to("seclist").emit('addsec', req);
 });
 
 socket.on('placeorder', function (req) {
