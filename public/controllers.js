@@ -134,8 +134,6 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
     };
 
     $scope.secdone = function() {
-      console.log("AAAAAA");
-      console.log("Reached secdone() function");
       console.log("emitting addsec for " + $scope.sec);
       socket.emit("addsec", {security:$scope.sec});
       //socket.emit("updateseclist", {room:$scope.room}); // Lade till denna
@@ -245,14 +243,6 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
         //$scope.entries.push(data.username + " joined the channel");
       });
     });
-
-
-    $scope.back = function(address) {
-      $location.hash("");
-      $location.path('/' + address);
-      $scope.location = $location.path();
-      console.log("location = " + $scope.location);
-    };
 
     $scope.redirect = function(security) {
       console.log("Trying to enter security : " + security.name);
