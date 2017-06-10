@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 
-var security = require("./security.js");
+var securitymodel = require("./security.js");
 var order = require("./order.js");
 var trade = require('./trade.js');
 
