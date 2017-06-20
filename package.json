@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gits-15.sys.kth.se:pontustv/lab5.git"
+    "url": "https://github.com/pontustervehn/Stock-trading-system.git"
   },
   "keywords": [
     "node",
