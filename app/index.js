@@ -5,6 +5,12 @@ var expressSession = require('express-session');
 var sharedsession = require('express-socket.io-session');
 
 var passwords = require('./passwords.js');
+/*
+"use strict";
+exports.getSecret = function(){
+  return "***********";
+};*/
+
 
 var port = 8080;
 
