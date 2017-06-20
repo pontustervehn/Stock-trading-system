@@ -27,8 +27,9 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
       $location.path('/security/' + security.name);
     };
 
+    //add security button pressed emits addsec through socket
     $scope.secdone = function() {
-      console.log("emitting addsec through socket with " + $scope.sec);
+      console.log("Emitting addsec through socket with " + $scope.sec);
       socket.emit("addsec", {security:$scope.sec});
       $scope.sec = "";
     };
@@ -58,6 +59,7 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
 
     var socket = io().connect();
 
+    //Updates (populates) orderlists and tradelists in browser
     socket.on('updateorderlist', function (data) {
       $scope.$apply(function(){
         http.get("/orderList/"+$scope.security, function(data) {

@@ -20,7 +20,7 @@ socket.on('addsec', function (req) {
   io.to("seclist").emit('addsec', req);
 });
 
-//
+//On placeorder emit in browser, send get commands to models. Checks order matches and commits changes to objects
 socket.on('placeorder', function (req) {
   if (req.username === ''){
     req.username = "Anonymous";
@@ -36,7 +36,7 @@ socket.on('placeorder', function (req) {
     var noOrderMatches = true
 
     if (order.getOrders().length <= 0){
-      console.log("Arrayen är tom. Lägger till första ordern.");
+      console.log("Array is empty. Adds first order.");
       order.addOrder(uname, type, secname, amount, price);
       io.to(secname).emit('updateorderlist', req);
       noOrderMatches = false;
