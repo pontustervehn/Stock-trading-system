@@ -1,5 +1,5 @@
 (function(){
-  var app = angular.module("chat", [
+  var app = angular.module("trade", [
   'ngRoute',
   'tradeControllers',
   'ui.bootstrap'

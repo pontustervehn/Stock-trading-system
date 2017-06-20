@@ -1,6 +1,6 @@
 (function() {
 
-  angular.module('chat')
+  angular.module('trade')
   .factory('UserService', function($http) {
 
     var username = "";
