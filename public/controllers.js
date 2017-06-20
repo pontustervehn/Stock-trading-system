@@ -1,6 +1,6 @@
-var chattControllers = angular.module('chattControllers', []);
+var tradeControllers = angular.module('tradeControllers', []);
 
-chattControllers.controller('seclistController', ['$scope', '$location',  'HttpService', 'UserService',
+tradeControllers.controller('seclistController', ['$scope', '$location',  'HttpService', 'UserService',
   function($scope, $location, http, user) {
 
     var socket = io().connect();
@@ -36,7 +36,7 @@ chattControllers.controller('seclistController', ['$scope', '$location',  'HttpS
   }
 ]);
 
-chattControllers.controller('securityController', ['$scope', 'HttpService', '$routeParams', 'UserService',
+tradeControllers.controller('securityController', ['$scope', 'HttpService', '$routeParams', 'UserService',
   function($scope, http, $routeParams, user) {
     $scope.security = $routeParams.security;
     $scope.mess = "";
@@ -92,12 +92,12 @@ chattControllers.controller('securityController', ['$scope', 'HttpService', '$ro
   }
 ]);
 
-chattControllers.controller('aboutController', ['$scope',
+tradeControllers.controller('aboutController', ['$scope',
   function($scope) {
   }
 ]);
 
-chattControllers.controller('loginController', ['$scope', 'HttpService', '$location', 'UserService',
+tradeControllers.controller('loginController', ['$scope', 'HttpService', '$location', 'UserService',
   function($scope, http, $location, user) {
     $scope.name = "";
     $scope.done = function() {
@@ -111,7 +111,7 @@ chattControllers.controller('loginController', ['$scope', 'HttpService', '$locat
   }
 ]);
 
-chattControllers.controller('navigationController', ['$scope',  '$location',
+tradeControllers.controller('navigationController', ['$scope',  '$location',
   function($scope,  $location) {
     $scope.location = $location.path();
 

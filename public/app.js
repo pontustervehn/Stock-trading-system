@@ -1,7 +1,7 @@
 (function(){
   var app = angular.module("chat", [
   'ngRoute',
-  'chattControllers',
+  'tradeControllers',
   'ui.bootstrap'
   ]);
 
