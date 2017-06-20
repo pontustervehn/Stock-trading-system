@@ -4,6 +4,8 @@ var http = require('http');
 var expressSession = require('express-session');
 var sharedsession = require('express-socket.io-session');
 
+var passwords = require('./passwords.js');
+
 var port = 8080;
 
 var app = express();
@@ -11,9 +13,10 @@ app.use(express.static(__dirname + '/../public'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 app.use(bodyParser.json());
 var session = expressSession({
-    secret: "MoveFromHereOrTheSecretWillBeOnGit",
+    secret: passwords.getSecret(),
     resave: true,
     saveUninitialized: true,
   });

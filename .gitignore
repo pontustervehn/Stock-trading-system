@@ -1,3 +1,6 @@
+# Express secret
+secret.js
+
 # Logs
 logs
 *.log
